@@ -1,0 +1,19 @@
+# rosdep keys that must not be installed / cannot be resolved on ROS 2 Humble
+# with Gazebo Harmonic. Used by docker/Dockerfile. One key per line.
+# (Whole packages that cannot be built here are hidden from rosdep in
+# Dockerfile.dockerignore instead.)
+
+# Gazebo Classic / Fortress: Arena (humble) targets Gazebo Harmonic and skips
+# these itself (arena_bringup/scripts/pull)
+libignition-gazebo6-dev
+gazebo_dev
+gazebo_ros
+gazebo_plugins
+gazebo_ros2_control
+
+# Not real keys: build tool / templating mistake in Arena's package.xml files
+ament_python
+${PROJECT_NAME}_msgs
+
+# hunav_rviz2_panel: Qt5 Xml is already provided by qtbase5-dev (pulled in by rviz_common)
+libqt5xml5

@@ -1,0 +1,16 @@
+{
+  "robots": [
+    {
+      "start": [26.5, 3.4, 0.7],
+      "goal": [19.2, -3.87, 0]
+    }
+  ], 
+  "obstacles": {
+    "static": [],
+    "dynamic": [
+      {"name": "1", "pos": [24.0, 2.0, 0], "type": "adult", "model": "gazebo_actor", "waypoints": [[27.1, 7.0, 0], [17.7, 7.0, 0]], "waypoint_mode": 1},
+      {"name": "2", "pos": [17.9, -3.89, 0], "type": "adult", "model": "gazebo_actor", "waypoints": [[26.2, -3.67, 0], [17.9, -3.89, 0]], "waypoint_mode": 1}
+    ],
+    "interactive": []
+  }
+}

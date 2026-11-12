@@ -1,0 +1,61 @@
+# Use through ../run.sh, which exports the variables referenced here.
+name: wm-${USERNAME}
+
+services:
+  dev:
+    image: wm-social-robot:${USERNAME}
+    build:
+      context: ..                       # repository root; filtered by Dockerfile.dockerignore
+      dockerfile: docker/Dockerfile
+      args:
+        USERNAME: ${USERNAME}
+        USER_UID: ${USER_UID}
+        USER_GID: ${USER_GID}
+        INSTALL_ISAAC: ${INSTALL_ISAAC:-1}
+    container_name: wm-${USERNAME}
+    hostname: wm
+    user: "${USER_UID}:${USER_GID}"     # never root for normal development
+    init: true
+    tty: true
+    stdin_open: true
+    # Default bridge network: ROS 2 / Gazebo traffic stays inside the container
+    # and cannot mix with other users of this shared machine. All Arena nodes
+    # run in this one container, so DDS discovery works normally.
+    shm_size: 16gb                      # FastDDS shared-memory transport, Gazebo
+    environment:
+      HOME: /home/${USERNAME}
+      USER: ${USERNAME}
+      WM_PROJECT_DIR: /home/${USERNAME}/wm_social_robot
+      # DISPLAY is passed per command by run.sh (docker exec -e DISPLAY), not
+      # here: a changed DISPLAY would make compose recreate the container
+      XAUTHORITY: /tmp/.docker.xauth
+      QT_X11_NO_MITSHM: "1"
+      ACCEPT_EULA: "Y"                  # Isaac Sim (optional, not installed)
+      OMNI_KIT_ACCEPT_EULA: "YES"
+    volumes:
+      # home: shell history, ~/.ros logs, caches (Docker volume, local disk)
+      - home:/home/${USERNAME}
+      # this repository, incl. the colcon workspace sources arena4_ws/src
+      # (bind mount: edit on the host, use immediately in the container)
+      - ${PROJECT_DIR}:/home/${USERNAME}/wm_social_robot
+      # colcon outputs on the machine's local disk instead of the NFS home;
+      # run.sh creates the mount points
+      - ws_build:/home/${USERNAME}/wm_social_robot/arena4_ws/build
+      - ws_install:/home/${USERNAME}/wm_social_robot/arena4_ws/install
+      - ws_log:/home/${USERNAME}/wm_social_robot/arena4_ws/log
+      # X11 for optional GUIs (RViz, Gazebo GUI)
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${XAUTH_FILE}:/tmp/.docker.xauth:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+volumes:
+  home:
+  ws_build:
+  ws_install:
+  ws_log:

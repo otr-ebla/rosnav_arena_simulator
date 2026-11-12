@@ -1,0 +1,8 @@
+DwaLocalPlannerROS:
+- odom_topic: odom
+- max_vel_x: $(arg speed)
+controller_frequency: 5.0
+controllers:
+- name: DwaLocalPlannerROS
+  type: dwa_local_planner/DWAPlannerROS
+planner_frequency: 0.0

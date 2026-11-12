@@ -1,0 +1,181 @@
+diff --git a/arena_bringup/launch/simulator/sim/gazebo/gazebo.launch.py b/arena_bringup/launch/simulator/sim/gazebo/gazebo.launch.py
+index 5cfe67b..0e1ddf5 100644
+--- a/arena_bringup/launch/simulator/sim/gazebo/gazebo.launch.py
++++ b/arena_bringup/launch/simulator/sim/gazebo/gazebo.launch.py
+@@ -7,7 +7,7 @@ from ament_index_python.packages import get_package_share_directory
+ from launch import LaunchDescription
+ from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
+ from launch.launch_description_sources import PythonLaunchDescriptionSource
+-from launch.substitutions import PathJoinSubstitution
++from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+ from launch_ros.actions import Node
+ 
+ from arena_bringup.future import IfElseSubstitution, PythonExpression  # noqa
+@@ -119,6 +119,13 @@ def generate_launch_description():
+         get_package_share_directory("ros_gz_sim"), "launch", "gz_sim.launch.py"
+     )
+ 
++    # wm_social_robot patch: selectable render engine (ogre = upstream default,
++    # ogre2 = PBR) and GPU (EGL) rendering of sensors when running server-only.
++    # Read as plain launch configurations so they can be set from the top-level
++    # launch without being threaded through every included file.
++    render_engine = LaunchConfiguration('render_engine', default='ogre')
++    headless_rendering = LaunchConfiguration('headless_rendering', default='false')
++
+     gazebo = IncludeLaunchDescription(
+         PythonLaunchDescriptionSource(gz_sim_launch_file),
+         launch_arguments={
+@@ -126,12 +133,17 @@ def generate_launch_description():
+                 world_path,
+                 # " -v 4",
+                 " -r",
+-                " --render-engine ogre",
++                " --render-engine ", render_engine,
+                 IfElseSubstitution(
+                     headless.substitution,
+                     " -s",
+                     "",
+                 ),
++                IfElseSubstitution(
++                    headless_rendering,
++                    " --headless-rendering",
++                    "",
++                ),
+             ],
+             "physics-engine": "gz-physics-dartsim",
+         }.items(),
+diff --git a/task_generator/launch/task_generator.launch.py b/task_generator/launch/task_generator.launch.py
+index 1a85f73..715c6c9 100644
+--- a/task_generator/launch/task_generator.launch.py
++++ b/task_generator/launch/task_generator.launch.py
+@@ -145,6 +145,10 @@ def generate_launch_description():
+                 **prefix.str_param,
+             },
+             parameter_file.substitution,
++            # wm_social_robot patch: optional YAML that overrides parameter_file
++            # (e.g. number of pedestrians); defaults to parameter_file itself
++            launch.substitutions.LaunchConfiguration(
++                'extra_parameter_file', default=parameter_file.substitution),
+         ],
+     )
+ 
+diff --git a/task_generator/task_generator/manager/robot_manager/robot_manager.py b/task_generator/task_generator/manager/robot_manager/robot_manager.py
+index 9f49381..c9b977d 100644
+--- a/task_generator/task_generator/manager/robot_manager/robot_manager.py
++++ b/task_generator/task_generator/manager/robot_manager/robot_manager.py
+@@ -100,6 +100,12 @@ class RobotManager(NodeInterface):
+         self._goal_timer = None
+ 
+     def _odom_base_transform(self):
++        # wm_social_robot patch: Isaac Sim publishes the real odom -> base_link
++        # transform (ros2isaacsim odom graph); this static identity transform on
++        # the same edge made Nav2 see the robot at the odom origin at times
++        # ("start position is off the global costmap").
++        if self.node.conf.Arena.SIM.value == Constants.SimSimulator.ISAAC:
++            return
+         self.node.do_launch(
+             launch_ros.actions.Node(
+                 package="tf2_ros",
+@@ -283,6 +289,7 @@ class RobotManager(NodeInterface):
+             f"Publishing goal: x={goal.position.x}, y={goal.position.y}, orientation={goal.orientation.to_yaw()}")
+ 
+         self._goal_pos = goal
++        self._is_goal_reached = False  # wm_social_robot patch: new goal, not reached yet
+ 
+         if self._goal_timer is not None:
+             self._goal_timer.cancel()
+@@ -363,8 +370,15 @@ class RobotManager(NodeInterface):
+         )
+ 
+     def _goal_status_callback(self, data: action_msgs.msg.GoalStatusArray):
+-        last_goal = next(reversed(data.status_list), None)
+-        self._is_goal_reached = last_goal and last_goal.status == action_msgs.msg.GoalStatus.STATUS_SUCCEEDED
++        # wm_social_robot patch: the status array lists every goal the action
++        # server still remembers, in no particular order; upstream took the last
++        # element, which after the first success was often an old SUCCEEDED goal.
++        # Then is_done stayed true and the explore task set a new random goal
++        # about every second, so the robot turned back and forth and never arrived.
++        if not data.status_list:
++            return
++        last_goal = max(data.status_list, key=lambda s: (s.goal_info.stamp.sec, s.goal_info.stamp.nanosec))
++        self._is_goal_reached = last_goal.status == action_msgs.msg.GoalStatus.STATUS_SUCCEEDED
+ 
+     def update(self):
+         """
+diff --git a/task_generator/task_generator/simulators/human/hunav/hunav.py b/task_generator/task_generator/simulators/human/hunav/hunav.py
+index 92e5187..05cf957 100644
+--- a/task_generator/task_generator/simulators/human/hunav/hunav.py
++++ b/task_generator/task_generator/simulators/human/hunav/hunav.py
+@@ -5,6 +5,7 @@ import traceback
+ 
+ import attrs
+ import geometry_msgs.msg
++import rclpy.callback_groups
+ from ament_index_python.packages import get_package_share_directory
+ from arena_rclpy_mixins.shared import Namespace
+ from geometry_msgs.msg import Point
+@@ -70,6 +71,9 @@ class _PedestrianHelper:
+     @classmethod
+     def plugin_entity(cls, namespace: str) -> Obstacle:
+ 
++        # wm_social_robot patch: pedestrian update rate (upstream 1000 Hz, i.e.
++        # every physics step); set by wm_bringup (ped_rate:=)
++        update_rate = float(os.environ.get('ARENA_HUNAV_UPDATE_RATE', '50'))
+         sdf_content = f"""<?xml version="1.0" ?>
+             <sdf version="1.9">
+                 <model name="hunav_plugin">
+@@ -84,7 +88,7 @@ class _PedestrianHelper:
+                         </visual>
+                     </link>
+                     <plugin name="HuNavSystemPluginIGN" filename="libHuNavSystemPluginIGN.so">
+-                        <update_rate>1000.0</update_rate>
++                        <update_rate>{update_rate}</update_rate>
+                         <namespace>{namespace}</namespace>
+                         <!-- <robot_name>jackal</robot_name> -->
+                         <use_gazebo_obs>true</use_gazebo_obs>
+@@ -203,6 +207,9 @@ class HunavHumanSimulator(DummyHumanSimulator):
+         self._wall_points = []
+         self._agents_container = Agents()  # Container to hold all registered agents
+         self._get_agents_container = Agents()  # Container specifically just to send the Agent attributes to Hunavsystemplugin
++        # wm_social_robot patch: worlds with their own geometry (hospital, ignc, factory)
++        # never call _spawn_walls_impl; without this get_walls raises and kills the node
++        self._wall_segments = []
+         self._agents_container.header.frame_id = "map"
+         self._logger.debug("Collections initialized")
+ 
+@@ -288,6 +295,10 @@ class HunavHumanSimulator(DummyHumanSimulator):
+             GetAgents,
+             service_names['get_agents'],
+             self._get_agents_callback,
++            # wm_social_robot patch: own callback group, so the Gazebo HuNav
++            # plugin (which blocks the simulation thread on this call) is
++            # answered even while a reset in the default group waits on Gazebo
++            callback_group=rclpy.callback_groups.MutuallyExclusiveCallbackGroup(),
+         )
+         self._logger.debug("GetAgents service provider created")
+ 
+@@ -297,6 +308,7 @@ class HunavHumanSimulator(DummyHumanSimulator):
+             GetWalls,
+             service_names['get_walls'],
+             self._get_walls_callback,
++            callback_group=rclpy.callback_groups.MutuallyExclusiveCallbackGroup(),  # wm_social_robot patch
+         )
+         self._logger.debug("GetWalls service provider created")
+ 
+diff --git a/task_generator/task_generator/simulators/human/isaac.py b/task_generator/task_generator/simulators/human/isaac.py
+index cbed850..17c7d7f 100644
+--- a/task_generator/task_generator/simulators/human/isaac.py
++++ b/task_generator/task_generator/simulators/human/isaac.py
+@@ -37,7 +37,11 @@ class IsaacHumanSimulator(DummyHumanSimulator):
+                     name=obstacle.name,
+                     obstacle=obstacle
+                 )
+-                model_name = random.choice(['F_Business_02', 'F_Medical_01', 'M_Medical_01', 'biped_demo', 'female_adult_police_01_new', 'female_adult_police_02', 'female_adult_police_03_new', 'male_adult_construction_01_new', 'male_adult_construction_03', 'male_adult_construction_05_new', 'male_adult_police_04', 'original_female_adult_business_02', 'original_female_adult_medical_01', 'original_female_adult_police_01', 'original_female_adult_police_02', 'original_female_adult_police_03', 'original_male_adult_construction_01', 'original_male_adult_construction_02', 'original_male_adult_construction_03', 'original_male_adult_construction_05', 'original_male_adult_medical_01', 'original_male_adult_police_04'])
++                # wm_social_robot patch: only the 'original_*' characters (same list as
++                # IsaacSimulator._spawn_pedestrian). 'biped_demo' is the bare animation
++                # rig, its skeleton has no valid animationSource and omni.anim.graph
++                # segfaults Isaac Sim on it a few steps after spawning.
++                model_name = random.choice(['original_female_adult_business_02', 'original_female_adult_medical_01', 'original_female_adult_police_01', 'original_female_adult_police_02', 'original_female_adult_police_03', 'original_male_adult_construction_01', 'original_male_adult_construction_02', 'original_male_adult_construction_03', 'original_male_adult_construction_05', 'original_male_adult_medical_01', 'original_male_adult_police_04'])
+                 # obstacle.model.name
+ 
+                 self._simulator.services.import_pedestrians.client.call(

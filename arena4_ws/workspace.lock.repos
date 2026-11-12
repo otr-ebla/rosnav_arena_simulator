@@ -1,0 +1,81 @@
+repositories:
+  arena/arena-rosnav:
+    type: git
+    url: https://github.com/Arena-Rosnav/arena-rosnav
+    version: c2ff4a87e8686013b53f1e9cd8b01b3ab04fbce4
+  arena/evaluation:
+    type: git
+    url: https://github.com/voshch/arena-evaluation.git
+    version: 94762429bea19b84cab50a3d0910a736184738a0
+  arena/isaac:
+    type: git
+    url: https://github.com/Arena-Rosnav/arena-isaac
+    version: a4beefe0203ec8a75d65d0ab70496b5e2c400605
+  arena/simulation-setup:
+    type: git
+    url: https://github.com/voshch/arena-simulation-setup.git
+    version: 3f142b25d88ce962c803b57cf20f38985d376dea
+  arena/tools:
+    type: git
+    url: https://github.com/voshch/arena-tools.git
+    version: cbf1d05abd436cdb820da9fd0c35847b06a39ae0
+  deps/hunav/hunav_sim:
+    type: git
+    url: https://github.com/voshch/hunav_sim.git
+    version: a69cf96d98b0d40e247f819d7aebab661ac68b3b
+  deps/hunav/people_msgs:
+    type: git
+    url: https://github.com/wg-perception/people.git
+    version: 0ae47f6e0208cedd84d19d066743fdc1d05fcafa
+  deps/nav2/BehaviorTree.CPP:
+    type: git
+    url: https://github.com/BehaviorTree/BehaviorTree.CPP.git
+    version: 669392a6fafd7ac2f47fad88f581c6913c47ae89
+  deps/nav2/angles:
+    type: git
+    url: https://github.com/ros/angles.git
+    version: 4b71a44dd2b3a24d7af30bf94b0ba34ece1d0558
+  deps/nav2/bond_core:
+    type: git
+    url: https://github.com/ros/bond_core.git
+    version: b65dc1681a1b2930f7691c7a39d2aec9c1a67b6a
+  deps/nav2/diagnostics:
+    type: git
+    url: https://github.com/ros/diagnostics.git
+    version: fe98a4806b55cf384f9591503ed713763dace932
+  deps/nav2/navigation2:
+    type: git
+    url: https://github.com/voshch/navigation2.git
+    version: 8e34dcf5790671085a893dc58d2a0940ec80dd1e
+  deps/robots/irobot_create:
+    type: git
+    url: https://github.com/iRobotEducation/create3_sim.git
+    version: 7d7a4f69a503d4eef22f13aeb8755c86955b8cc5
+  deps/robots/jackal:
+    type: git
+    url: https://github.com/jackal/jackal.git
+    version: 017b8b581a90873047f7d6fe438bd87513be4a76
+  deps/robots/turtlebot4:
+    type: git
+    url: https://github.com/turtlebot/turtlebot4.git
+    version: a6ee13b63cbd524500cc6a68cd20dbef69f326a9
+  deps/slam_toolbox:
+    type: git
+    url: https://github.com/SteveMacenski/slam_toolbox.git
+    version: dccc5d1fd2b5007098f4050e681d20da37ef183f
+  gazebo/hunav_gz_plugin:
+    type: git
+    url: https://github.com/Arena-Rosnav/hunav_gz_plugin
+    version: 9492688786fd2ec7f4bfe96b51c9d8c72b55d440
+  gazebo/ros_gz:
+    type: git
+    url: https://github.com/voshch/ros_gz.git
+    version: dcae6932af610406c0d251d588b722f6243f8054
+  gazebo/sdformat_urdf:
+    type: git
+    url: https://github.com/ros/sdformat_urdf.git
+    version: 7b73ddb8af07b8dd5cee5fa8231e982f4ad8c217
+  gazebo/turtlebot4_simulator:
+    type: git
+    url: https://github.com/turtlebot/turtlebot4_simulator.git
+    version: 0ea4a60c51e49ed4a9e25b4f9971ff0f0c9a08fe

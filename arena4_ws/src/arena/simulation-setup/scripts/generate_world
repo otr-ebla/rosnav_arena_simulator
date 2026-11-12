@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+
+import argparse
+import io
+import os
+import sys
+import requests
+import zipfile
+
+from ament_index_python.packages import get_package_share_directory
+
+
+def main(args=None):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('prompt')
+    parser.add_argument('-e', '--endpoint', type=str, default='http://localhost:5501')
+    parser.add_argument('-o', '--outdir', type=str, default='generated')
+    args = parser.parse_args()
+
+    prompt = args.prompt
+    endpoint = args.endpoint
+    outdir = args.outdir
+
+    if not os.path.isabs(outdir):
+        outdir = os.path.join(
+            get_package_share_directory('arena_simulation_setup'),
+            'worlds',
+            os.path.basename(outdir)
+        )
+
+    result = requests.post(f'{endpoint}/pipeline', json=dict(prompt=prompt))
+    files = zipfile.ZipFile(io.BytesIO(result.content))
+
+    os.makedirs(outdir, exist_ok=True)
+    files.extractall(outdir)
+
+    sys.exit(0)
+
+
+if __name__ == '__main__':
+    main()

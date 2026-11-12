@@ -1,0 +1,28 @@
+# Build context is the repository root. Send only what the Dockerfile needs:
+# the pip requirements and the package manifests of the workspace (for rosdep).
+# Sources, build artifacts, datasets and assets stay out of the image.
+*
+!docker/requirements-arena.txt
+!docker/rosdep-skip-keys.txt
+!docker/nvidia-extra
+!arena4_ws/src/**/package.xml
+!arena4_ws/src/**/COLCON_IGNORE
+!arena4_ws/src/**/AMENT_IGNORE
+!arena4_ws/src/**/CATKIN_IGNORE
+
+# Packages hidden from rosdep. Keep in sync with packages-skip in
+# colcon-defaults.yaml.
+# - ROS 1 (catkin) packages inside imported repos
+arena4_ws/src/deps/hunav/people_msgs/leg_detector/**
+arena4_ws/src/deps/hunav/people_msgs/face_detector/**
+arena4_ws/src/deps/hunav/people_msgs/people/**
+arena4_ws/src/deps/hunav/people_msgs/people_tracking_filter/**
+arena4_ws/src/deps/hunav/people_msgs/people_velocity_tracker/**
+arena4_ws/src/arena/simulation-setup/entities/robots/boxer/**
+arena4_ws/src/arena/simulation-setup/entities/robots/husky/**
+# - Gazebo Classic / Fortress simulator packages (Arena uses Harmonic and only
+#   needs the robot descriptions from these repos)
+arena4_ws/src/deps/robots/irobot_create/irobot_create_gazebo/**
+arena4_ws/src/deps/robots/irobot_create/irobot_create_ignition/**
+arena4_ws/src/gazebo/turtlebot4_simulator/**
+arena4_ws/src/deps/nav2/navigation2/nav2_system_tests/**

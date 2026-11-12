@@ -1,0 +1,19 @@
+{
+    "robots": [
+      {
+        "start": [-7, -2, 0.7],
+        "goal": [25, 4, 0]
+      }
+    ], 
+    "obstacles": {
+      "static": [],
+      "dynamic": [
+        {"name": "5", "pos": [18, 0, 0], "type": "adult", "model": "gazebo_actor", "waypoints": [[9, 1, 0], [25.5, 4.8, 0]], "waypoint_mode": 1},
+        {"name": "6", "pos": [18.3, 3, 0], "type": "adult", "model": "gazebo_actor", "waypoints": [[-4, -3, 0], [1, 2, 0]], "waypoint_mode": 1},
+        {"name": "7", "pos": [9.5, -5, 0], "type": "adult", "model": "gazebo_actor", "waypoints": [[7, 0, 0], [24.5, -3.8, 0]], "waypoint_mode": 1},
+        {"name": "8", "pos": [4, 4, 0], "type": "adult", "model": "gazebo_actor", "waypoints": [[12, -4, 0], [-6, 0.6, 0]], "waypoint_mode": 1},
+        {"name": "9", "pos": [25, 4, 0], "type": "adult", "model": "gazebo_actor", "waypoints": [[12.5, 2, 0], [-6, -3, 0]], "waypoint_mode": 1}
+      ],
+      "interactive": []
+    }
+  }

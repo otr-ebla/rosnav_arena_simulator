@@ -1,0 +1,36 @@
+diff --git a/src/HuNavSystemPlugin.cpp b/src/HuNavSystemPlugin.cpp
+index c05aa57..9ad61e7 100644
+--- a/src/HuNavSystemPlugin.cpp
++++ b/src/HuNavSystemPlugin.cpp
+@@ -1620,10 +1620,9 @@ void HuNavSystemPluginIGN::PreUpdate(const gz::sim::UpdateInfo& _info, gz::sim::
+ 
+   //GZ_PROFILE("HuNavSystemPluginIGN::PreUpdate");
+ 
+-  _ecm.Each<gz::sim::components::Name>([&](const gz::sim::Entity &entity, const gz::sim::components::Name *name) {
+-    gzmsg << "Entity: " << entity << " Name: " << name->Data() << std::endl;
+-    return true;
+-});
++  // wm_social_robot patch: the upstream code walked every entity of the world
++  // here on every physics step only to print a debug message (very slow in
++  // large worlds such as hospital); removed.
+ 
+   counter_++;
+ 
+@@ -1641,6 +1640,17 @@ void HuNavSystemPluginIGN::PreUpdate(const gz::sim::UpdateInfo& _info, gz::sim::
+   {
+     initializeAgents(_ecm);
+   }
++
++  // wm_social_robot patch: honour <update_rate>. Upstream ran the obstacle
++  // search and a blocking compute_agents service call on every physics step.
++  if (update_rate_secs_ > 0.0)
++  {
++    std::chrono::duration<double> since = _info.simTime - lastUpdate_;
++    if (since.count() >= 0.0 && since.count() < update_rate_secs_)
++    {
++      return;
++    }
++  }
+   
+   // Time delta
+   std::chrono::duration<double> dtDuration = _info.simTime - lastUpdate_;

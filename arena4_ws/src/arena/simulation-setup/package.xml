@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>arena_simulation_setup</name>
+  <version>4.0.0</version>
+  <description>The arena_simulation_setup package</description>
+  <maintainer email="dev@voshch.dev">voshch</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <exec_depend>arena_bringup</exec_depend>
+  <exec_depend>arena_rclpy_mixins</exec_depend>
+  
+  <depend>topic_tools</depend>
+  
+  <depend>jackal_description</depend>
+  <depend>realsense2_description</depend>
+  <depend>lms1xx</depend>
+  
+  <export>
+    <build_type>ament_python</build_type>
+    </export>
+</package>

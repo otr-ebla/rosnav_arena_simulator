@@ -1,0 +1,46 @@
+groups:
+  - name: "canteen_tables"
+    margin: 4
+    size: [5.0, 5.0] # or compute this otf (as area of obstacles plus some padding)
+    rotations: [0]
+    entities:
+      static:
+        - position: [0.0, 0.0, 0]
+          model: restaurant_tableset
+
+  - name: "canteen_waiting"
+    margin: 5
+    size: [2.0,2.0]
+    rotations: [0]
+    entities:
+      static: 
+      - position: [0,0,0]
+        model: restaurant_bench1
+      - position: [0,0,-90]
+        model: restaurant_bench1
+  
+  - name: "canteen_bar"
+    margin: 5
+    size: [2.0,2.0]
+    rotations: [0]
+    entities:
+      static:
+      - position: [0,0,0]
+        model: restaurant_tableset
+  - name: "planter_bench"
+    margin: 5
+    size: [7.0,7.0]
+    rotations: [0]
+    entities:
+      static: 
+      - position: [0,0,0]
+        model: PlanterBench
+
+  - name: "BarCabinet"
+    margin: 5
+    size: [2.0, 2.0]
+    rotations: [0]
+    entities:
+      static: 
+      - position: [0,0,0]
+        model: BarCabinet

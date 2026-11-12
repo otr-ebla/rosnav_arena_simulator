@@ -1,0 +1,34 @@
+# colcon defaults for arena4_ws (exported as COLCON_DEFAULTS_FILE by
+# docker/arena_env.bash). Plain `colcon build` in the workspace uses these.
+build:
+  symlink-install: true
+  cmake-args:
+    - -DBUILD_TESTING=OFF
+    - -DCMAKE_BUILD_TYPE=Release
+  # Packages that cannot be built here. Arena's own tools/colcon_build lets
+  # them fail with --continue-on-error instead. Keep in sync with the
+  # exclusions in Dockerfile.dockerignore (which hide them from rosdep).
+  packages-skip:
+    # ROS 1 (catkin) packages shipped inside imported repos
+    - leg_detector
+    - face_detector
+    - people
+    - people_tracking_filter
+    - people_velocity_tracker
+    - boxer_description
+    - husky_description
+    # Gazebo Classic simulator packages (iRobot Create 3)
+    - irobot_create_gazebo_plugins
+    - irobot_create_gazebo_sim
+    - irobot_create_gazebo_bringup
+    # Gazebo Fortress ("Ignition") simulator packages; Arena uses Harmonic
+    - irobot_create_ignition_bringup
+    - irobot_create_ignition_plugins
+    - irobot_create_ignition_sim
+    - irobot_create_ignition_toolbox
+    - turtlebot4_simulator
+    - turtlebot4_ignition_toolbox
+    - turtlebot4_ignition_gui_plugins
+    - turtlebot4_ignition_bringup
+    # Nav2 integration tests (need Gazebo Classic)
+    - nav2_system_tests

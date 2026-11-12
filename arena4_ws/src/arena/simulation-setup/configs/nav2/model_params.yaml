@@ -1,0 +1,36 @@
+observation_sources_string: "scan" # massive bullshit, costmaps still need string param
+observation_sources:
+  - scan
+observation_sources_dict:
+  scan:
+    topic: /front/scan
+    max_obstacle_height: 2.0
+    clearing: True
+    marking: True
+    data_type: "LaserScan"
+
+polygons:
+  - StopPolygon
+polygons_dict:
+  StopPolygon:
+    type: "polygon"
+    points: "[ [0.1, 0.1], [0.1, -0.1], [-0.1, -0.1], [-0.1, 0.1] ]"
+    action_type: "stop"
+    min_points: 4
+    visualize: True
+    polygon_pub_topic: "polygon_stop"
+    enabled: True
+
+planner_plugins:
+  - GridBased
+planner_plugins_dict:
+  GridBased:
+    plugin: "nav2_navfn_planner/NavfnPlanner"
+    tolerance: 0.5
+    use_astar: false
+    allow_unknown: true
+
+footprint: "[ [0.1, 0.1], [0.1, -0.1], [-0.1, -0.1], [-0.1, 0.1] ]"
+
+robot_base_frame: 'base_link'
+robot_odom_frame: 'odom'

@@ -1,0 +1,47 @@
+groups:
+  # - name: "patient_room"
+  #   margin: 3
+  #   rotations: [0,180]
+  #   size: [2,2]
+  #   entities:
+  #     static:
+  #     - position: [0,0,0]
+  #       model: patient_bed
+  #     - position: [-0.75,1,0]
+  #       model: bedside_tables
+  #     - position: [0,-0.5,90]
+  #       model: curtain_closed
+        
+  # - name: "hospital_office"
+  #   margin: 4
+  #   size: [2.0, 2.0] # or compute this otf (as area of obstacles plus some padding)
+  #   rotations: [-90, 90]
+  #   entities:
+  #     static:
+  #       - position: [0.0, 0.0, 0.0]
+  #         model: office_desk
+  #       - position: [1, 0, -90]
+  #         model: office_chair
+  #       - position: [1,2,90]
+  #         model: retail_shelfA
+  #       - position: [0,2,90]
+  #         model: retail_shelfA
+  #       - position: [0,-2,90]
+  #         model: retail_shelfA
+  #       - position: [1,-2,90]
+  #         model: retail_shelfA
+
+  - name: hospital_reception
+    margin: 5
+    size: [10.0,10.0]
+    rotations: [0]
+    entities:
+      static:
+      - position: [10,2.0,90]
+        model: nurse_station
+      - position: [-7,12,-90]
+        model: vending_machine
+      - position: [-6,12,-90]
+        model: vending_machine
+      - position: [-5,12,-90]
+        model: vending_machine

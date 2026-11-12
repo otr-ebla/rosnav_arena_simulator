@@ -1,0 +1,123 @@
+groups:
+  - name: "office"
+    margin: 3
+    size: [1.5, 1.5] # or compute this otf (as area of obstacles plus some padding)
+    rotations: [0, 180]
+    entities:
+      static:
+        - position: [0.0, 0.0, 0.0]
+          model: office_desk
+        - position: [1, 0, -90]
+          model: office_chair
+
+  # - name: "study"
+  #   rotations: [0, 90, 180, 270]
+  #   margin: 3
+  #   size: [2, 2] # or compute this otf (as area of obstacles plus some padding)
+  #   entities:
+  #     static:
+  #       - position: [0.0, 0.0, 0.0]
+  #         model: bookshelf
+  #       - position: [1.0, 1.0, 0.0]
+  #         model: cabinet
+
+  # - name: "industrial"
+  #   rotations: [0, 90, 180, 270]
+  #   margin: 1
+  #   size: [2, 2] # or compute this otf (as area of obstacles plus some padding)
+  #   entities:
+  #     static:
+  #       # - position: [0.0, 0.0, 0.0]
+  #       #   model: conveyor_belt_ariac
+  #       # - position: [-1.0, 1.0, 0.0]
+  #       #   model: crate
+  #       - position: [1.0, 1.0, 0.0]
+  #         model: large_pallet1
+
+  - name: "circle"
+    margin: 1
+    rotations: [0, 15, 30, 45, 60, 75]
+    size: [3, 3] # or compute this otf (as area of obstacles plus some padding)
+    entities:
+      static:
+        - position: [0, -1, 0]
+          model: chair
+        - position: [0.707, -0.707, 45]
+          model: chair
+        - position: [1, 0, 90]
+          model: chair
+        - position: [0.707, 0.707, 135]
+          model: chair
+        - position: [0, 1, 180]
+          model: chair
+        - position: [-0.707, 0.707, 225]
+          model: chair
+        - position: [-1, 0, 270]
+          model: chair
+        - position: [-0.707, -0.707, 315]
+          model: chair
+
+  - name: "cafeteria"
+    margin: 1.5
+    rotations: [0,180]
+    size: [1.5,1.5]
+    entities:
+      static:
+        - position: [0,0,0]
+          model: table
+        - position: [0.5,0,90]
+          model: chair
+        - position: [0,0.5,180]
+          model: chair
+        - position: [0,-0.5,0]
+          model: chair
+        - position: [-0.5,0,-90]
+          model: chair
+
+  - name: "residential"
+    margin: 5
+    rotations: [180]
+    size: [2,2]
+    entities:
+      static:
+      - position: [0,0,90]
+        model: residential_bed
+      - position: [2,0,0]
+        model: residential_carpet
+      # - position: [3,1,90]
+      #   model: residential_chairA
+      # - position: [3,-1,90]
+      #   model: residential_chairD    
+      - position: [2,0,0]
+        model: residential_coffee_table
+      - position: [2,2,0]
+        model: residential_fridge
+      - position: [2.5,-0.5,180]
+        model: residential_sofa_1
+      - position: [-1,0,0]
+        model: residential_curtain
+
+  - name: "hospital"
+    margin: 3
+    rotations: [0,180]
+    size: [2,2]
+    entities:
+      static:
+      - position: [0,0,0]
+        model: patient_bed
+      - position: [-0.75,1,0]
+        model: bedside_tables
+      - position: [0,-0.5,90]
+        model: curtain_closed
+
+  - name: "outdoor"
+    margin: 10
+    rotations: [180]
+    size: [2,2]
+    entities:
+      static:
+      - position: [0,0,90]
+        model: tree
+      - position: [3,8,0]
+        model: house_1
+

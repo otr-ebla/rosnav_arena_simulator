@@ -1,0 +1,76 @@
+static:
+- model: CoffeTable
+  position:
+  - 1.7895812758455922
+  - 3.418788563882965
+  - 270
+- model: KidsBed
+  position:
+  - 3.8608559006668832
+  - 2.0247194407462223
+  - 90
+- model: LazySofa
+  position:
+  - 2.800363292758384
+  - 7.199673003905342
+  - 90
+- model: Multi-SeatSofa
+  position:
+  - 3.6454433396854675
+  - 7.875585306032247
+  - 270
+- model: Shelf
+  position:
+  - 3.1814778237255004
+  - 6.882839112283356
+  - 270
+- model: Table
+  position:
+  - 5.35217363053821
+  - 3.7989892338293494
+  - 0
+- model: Bookshelf
+  position:
+  - 4.0760182596345915
+  - 9.264694470032287
+  - 0
+- model: Multi-SeatSofa
+  position:
+  - 8.381312546373628
+  - 11.820129538405554
+  - 270
+- model: Sofa
+  position:
+  - 4.4071947432299
+  - 9.113566589644622
+  - 180
+- model: CoffeTable
+  position:
+  - 9.444913303539925
+  - 7.7663530500635245
+  - 0
+- model: Desk
+  position:
+  - 9.745631693513978
+  - 8.206299539572914
+  - 0
+- model: Chair
+  position:
+  - 9.565642236170293
+  - 15.777852712441007
+  - 90
+- model: L-ShapedSofa
+  position:
+  - 8.04551465039112
+  - 20.521796620480565
+  - 180
+- model: LazySofa
+  position:
+  - 24.7077151437848
+  - 22.62305232504379
+  - 90
+- model: LoveseatSofa
+  position:
+  - 26.437243035858234
+  - 10.452071968800867
+  - 0

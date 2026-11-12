@@ -1,0 +1,10 @@
+# wm_social_robot: Isaac Sim-only world. Isaac loads this environment USD instead
+# of building walls from the map; map/ was generated from the same USD with
+#   tools/isaac_make_map.py Hospital/hospital.usd <this dir>/map   (defaults: 5 cm, 0.1-1.8 m slice, 0.3 m clearance)
+# so Arena's map frame equals Isaac's world frame.
+usd: Hospital/hospital.usd   # below <Isaac assets root>/Isaac/Environments
+floor_z: 0.035               # floor height in the USD; Isaac shifts the scene down by this (robot spawns at z=0)
+hide: [Ceiling, Roof]        # invisible in Isaac (name parts): the dome light lights the interior, as in Arena's video
+lights:                      # prim path -> intensity (Arena's own dome light off; the hospital's dome is 10000 = overexposed)
+  /World/Light_1: 0
+  /World/Environment/DomeLight: 3000

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fast DDS profile for the container: UDP only, no shared-memory transport.
+     Killed simulator processes leave stale /dev/shm/fastrtps_* port locks
+     ("RTPS_TRANSPORT_SHM Error ... open_and_lock_file failed"); messages through
+     them can get lost, and a lost lifecycle service reply hangs Nav2's bring-up
+     (Humble's lifecycle manager waits forever). Loaded by docker/arena_env.bash
+     unless ~/.ros/fastdds.xml exists. -->
+<profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles">
+  <transport_descriptors>
+    <transport_descriptor>
+      <transport_id>udp_only</transport_id>
+      <type>UDPv4</type>
+    </transport_descriptor>
+  </transport_descriptors>
+  <participant profile_name="udp_only_participant" is_default_profile="true">
+    <rtps>
+      <userTransports>
+        <transport_id>udp_only</transport_id>
+      </userTransports>
+      <useBuiltinTransports>false</useBuiltinTransports>
+    </rtps>
+  </participant>
+</profiles>

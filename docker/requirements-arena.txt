@@ -1,0 +1,32 @@
+# Python dependencies of Arena-Rosnav (branch humble), taken from the main
+# group of arena4_ws/src/arena/arena-rosnav/pyproject.toml (Poetry "^" ranges
+# translated to pip specifiers). Installed system-wide in the image instead of
+# Arena's pyenv + Poetry virtualenv, because ROS 2 here comes from apt and uses
+# the system Python 3.10.
+#
+# Deliberately left to apt (Ubuntu 22.04 / ROS packages), not pip:
+#   PyQt5, PyQt5-sip, sip  -> python3-pyqt5 (pip pins only matter when ROS is
+#                             compiled from source, as Arena's installer does)
+#   opencv-python          -> python3-opencv 4.5.4 (pulled in by cv_bridge; the
+#                             pip wheel bundles its own Qt and breaks RViz/PyQt)
+#   setuptools             -> 59.6 from apt already satisfies "<80"
+#   colcon, pytest, flake8 -> python3-colcon-common-extensions etc.
+# Optional groups (planners, training: torch, sb3, wandb, ...) are not
+# installed; see README "Not installed".
+rospkg>=1.4.0,<2
+PyYAML>=6.0,<7
+filelock>=3.7.1,<4
+scipy>=1.8.1,<2
+empy>=3.3.4,<4
+defusedxml>=0.7.1,<0.8
+lxml>=4.9.1,<5
+netifaces>=0.11.0,<0.12
+watchdog>=3.0.0,<4
+rosros>=0.2.5,<0.3
+transforms3d>=0.4.2,<0.5
+attrs>=24.2.0,<25
+shapely>=2.0.6,<3
+numpy>=1.25.4,<2
+pydantic>=2.11.5,<3
+pillow>=11.2.1,<12
+requests>=2.32.4,<3

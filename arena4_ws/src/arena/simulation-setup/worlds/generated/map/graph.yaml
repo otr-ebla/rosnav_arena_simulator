@@ -1,0 +1,63 @@
+edges:
+- id: '0'
+  source: '0'
+  target: '2'
+- id: '1'
+  source: '0'
+  target: '3'
+- id: '2'
+  source: '1'
+  target: '2'
+- id: '3'
+  source: '2'
+  target: '4'
+- id: '4'
+  source: '3'
+  target: '4'
+metrics: false
+nodes:
+- assets:
+  - name: CoffeTable
+    quantity: 1
+  - name: KidsBed
+    quantity: 1
+  - name: LazySofa
+    quantity: 1
+  - name: Multi-SeatSofa
+    quantity: 1
+  - name: Shelf
+    quantity: 1
+  - name: Table
+    quantity: 1
+  id: '0'
+  roomType: Kitchen
+- assets:
+  - name: Bookshelf
+    quantity: 1
+  - name: Multi-SeatSofa
+    quantity: 1
+  - name: Sofa
+    quantity: 1
+  id: '1'
+  roomType: Living Room
+- assets:
+  - name: CoffeTable
+    quantity: 1
+  - name: Desk
+    quantity: 1
+  id: '2'
+  roomType: Bathroom
+- assets:
+  - name: Chair
+    quantity: 1
+  - name: L-ShapedSofa
+    quantity: 1
+  id: '3'
+  roomType: Bedroom
+- assets:
+  - name: LazySofa
+    quantity: 1
+  - name: LoveseatSofa
+    quantity: 1
+  id: '4'
+  roomType: Living Room

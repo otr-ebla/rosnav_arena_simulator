@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Conda environment
+legacy_conda/
+
+# ROS 2 generated files
+build/
+install/
+log/
+
+# IDE
+.idea/
+.vscode/
+
+# System
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.swp
+*.bak
+*~
+
+# Git internals
+.git/
+
+# Core dumps
+core
+core.*

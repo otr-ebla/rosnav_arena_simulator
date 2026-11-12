@@ -1,0 +1,11 @@
+TrajectoryPlannerROS:
+  max_vel_x: $(arg speed)
+  odom_topic: odom
+controller_frequency: 5.0
+controllers:
+- name: TrajectoryPlannerROS
+  type: base_local_planner/TrajectoryPlannerROS
+planner_frequency: 0.0
+planners:
+- name: NavfnROS
+  type: navfn/NavfnROS

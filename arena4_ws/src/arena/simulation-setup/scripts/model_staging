@@ -1,0 +1,80 @@
+#!/usr/bin/env python
+
+import collections.abc
+import os
+
+from ament_index_python.packages import get_package_share_directory
+
+from arena_simulation_setup.entities.obstacles.static import Obstacle
+from arena_simulation_setup.entities.obstacles.dynamic import DynamicObstacle
+from arena_simulation_setup.entities.robot import Robot
+
+package_name = 'arena_simulation_setup'
+
+
+class InstallStagingData:
+
+    def __init__(self, install_dir: str):
+        self._install_dir: str = install_dir
+        self._symlinks: dict[str, str] = {}
+        self._dependencies: list[str] = []
+
+    def add_to_staging(self, path: str, name: str | None = None):
+        if name is None:
+            name = os.path.basename(path)
+        self._symlinks[name] = path
+
+    def add_dependency(self, package: str, paths: collections.abc.Iterable[str] | None = None):
+        if paths is None:
+            paths = ['..']
+        self._dependencies.append(package)
+
+    def execute(self):
+        os.makedirs(self._install_dir, exist_ok=True)
+
+        for dest_name, src_path in self._symlinks.items():
+            dest_path = os.path.join(self._install_dir, dest_name)
+            src_path_abs = os.path.abspath(src_path)
+
+            if os.path.exists(src_path) and not os.path.lexists(dest_path):
+                os.symlink(src_path_abs, dest_path)
+
+        deps_file = os.path.join(self._install_dir, 'deps')
+        with open(deps_file, 'w') as f:
+            f.write('\n'.join(self._dependencies))
+
+
+def main(install_dir: str):
+
+    handler = InstallStagingData(install_dir)
+
+    base_dir = get_package_share_directory(package_name)
+
+    for name in Obstacle.list():
+        handler.add_to_staging(Obstacle(name).path, name)
+
+    for name in DynamicObstacle.list():
+        handler.add_to_staging(DynamicObstacle(name).path, name)
+
+    for name in Robot.list():
+        handler.add_to_staging(Robot(name).path, name)
+
+    for model in os.listdir(models_dir := os.path.join(base_dir, 'gazebo_models')):
+        if not model.startswith('.'):
+            handler.add_to_staging(os.path.join(models_dir, model))
+
+    colcon_deps_file = os.path.join(base_dir, '..', 'colcon-core', 'packages', package_name)
+    if os.path.isfile(colcon_deps_file):
+        with open(colcon_deps_file) as f:
+            for dep in f.read().split(':'):
+                handler.add_dependency(dep)
+
+    handler.execute()
+
+
+if __name__ == '__main__':
+    import sys
+    if len(sys.argv) < 2:
+        print(f'usage: {os.path.basename(__file__)} <install_dir>')
+        sys.exit(1)
+    main(sys.argv[1])

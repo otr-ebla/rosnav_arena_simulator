@@ -1,0 +1,3 @@
+static:
+- model: shelf
+  position: [5,5,0]
